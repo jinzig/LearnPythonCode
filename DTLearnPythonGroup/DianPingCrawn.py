@@ -23,9 +23,9 @@ import select
 
 
 def comments_wods(shopID, commpg):
-    options = webdriver.ChromeOptions()
-    options.add_experimental_option("excludeSwitches", ["ignore-certificate-errors"])
-    driver = webdriver.Chrome(chrome_options=options)
+    # options = webdriver.ChromeOptions()
+    # options.add_experimental_option("excludeSwitches", ["ignore-certificate-errors"])
+    # driver = webdriver.Chrome(chrome_options=options)
     pg = 1
     while pg <= commpg:
         driver = webdriver.Chrome(executable_path='/Users/sallyfan/downloads/chromedriver')
@@ -34,14 +34,16 @@ def comments_wods(shopID, commpg):
         url = "http://www.dianping.com/shop/%d/review_more?pageno=%d" % (shopID, pg)
         driver.get(url)
         pg +=1
+        all_comments = []
 
 
         comments_content = driver.find_elements_by_class_name("J_brief-cont")
         for i in comments_content:
             i.text
-            all_comments.append()
+            print (i)
         else:
             print('over哦')
-    print (all_comments)
+            time.sleep(5)
+    print (comments_content)
 
 print(comments_wods(90455659, 32))
