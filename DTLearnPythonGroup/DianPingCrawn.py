@@ -29,6 +29,7 @@ def comments_wods(shopID, commpg):
     pg = 1
     while pg <= commpg:
         driver = webdriver.Chrome(executable_path='/Users/sallyfan/downloads/chromedriver')
+        # driver = webdriver.PhantomJS(executable_path='/Users/sallyfan/downloads/phantomjs-2.1.1-macosx/bin/phantomjs')
 
         # driver = webdriver.Safari()
         url = "http://www.dianping.com/shop/%d/review_more?pageno=%d" % (shopID, pg)
@@ -38,12 +39,14 @@ def comments_wods(shopID, commpg):
 
 
         comments_content = driver.find_elements_by_class_name("J_brief-cont")
-        for i in comments_content:
-            i.text
-            print (i)
-        else:
-            print('over哦')
-            time.sleep(5)
-    print (comments_content)
+        with open('dianping.txt', 'w+') as f:
+            for i in comments_content:
+                # i.text
+                print (i.text)
+                f.write(i.text)
 
-print(comments_wods(90455659, 32))
+
+
+    # print (comments_content)
+
+print(comments_wods(16795494, 72))
