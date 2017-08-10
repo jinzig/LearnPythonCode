@@ -8,24 +8,19 @@ import random
 import select
 
 
-# def commnet_page_no(shopID):
-#     driver = webdriver.Safari()
-#     url = "http://www.dianping.com/shop/%s/review_more?pageno=1" % shopID
-#     driver.get(url)
-#
-#
-#     comments = driver.find_element_by_class_name("PageSel")
-#     for i in comments:
-#         i.text
-#     print(type(comment))
-#     print (i)
-#     commpg = comments
+
 
 
 def comments_wods(shopID, commpg):
-    # options = webdriver.ChromeOptions()
-    # options.add_experimental_option("excludeSwitches", ["ignore-certificate-errors"])
-    # driver = webdriver.Chrome(chrome_options=options)
+    uaList = [
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2486.0 Safari/537.36 Edge/13.10586',
+        'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36',
+        'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:43.0) Gecko/20100101 Firefox/43.0']
+
+    dcap = dict(webdriver.DesiredCapabilities.PHANTOMJS)
+
+    dcap["phantomjs.page.settings.userAgent"] = (random.choice(uaList))
+
     pg = 1
     while pg <= commpg:
         driver = webdriver.Chrome(executable_path='/Users/sallyfan/downloads/chromedriver')
@@ -41,11 +36,19 @@ def comments_wods(shopID, commpg):
         comments_content = driver.find_elements_by_class_name("J_brief-cont")
         with open('dianping.txt', 'w+') as f:
             for i in comments_content:
-                # i.text
-                print (i.text)
-                f.write(i.text)
+                all_comments.append(i.text)
+            pg_comment= "".join(all_comments)
+                # print (i.text)
+            print(pg_comment)
+    return pg_comment
+            # f.write()
 
+import jieba
+wordlist = jieba.cut(comments_wods(), cut_all = True)
+word_space_split = " ".join(wordlist)
 
+import matplotlib.pyplot as plt
+from wordcloud import WordCloud
 
     # print (comments_content)
 
