@@ -48,7 +48,17 @@ wordlist = jieba.cut(comments_wods(), cut_all = True)
 word_space_split = " ".join(wordlist)
 
 import matplotlib.pyplot as plt
-from wordcloud import WordCloud
+from wordcloud import WordCloud, ImageColorGenerator
+import numpy as np
+import Pil.Image as Image
+coloring = np.array(Image.open("/Users/apple/......."))
+my_wordcloud = WordCloud(background_color = "white", max_words = 5000, mask = coloring, max_font_size = 60, random_state = 42, scale = 2, font_path = "....").generate(word_space_split)
+image_colors = ImageColorGenerator(coloring)
+plt.imshow(my_wordcloud.recolor(color_func=image_colors))
+plt.imshow(my_wordcloud)
+plt.axis("off")
+plt.show()
+
 
     # print (comments_content)
 
