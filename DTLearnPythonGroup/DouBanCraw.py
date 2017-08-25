@@ -5,16 +5,17 @@ import time
 
 print('----------------SYSTEM LOADIUNG, please wait........')
 SUMRESOURCES = 0 #全局变量
-driver_detail = webdriver.PhantomJS(executable_path='/Users/sallyfan/downloads/phantomjs-2.1.1-macosx/bin/phantomjs')
-driver_item = webdriver.Firefox
-url = "https://movie.douban.com/"
+# driver_detail = webdriver.PhantomJS(executable_path='/Users/sallyfan/downloads/phantomjs-2.1.1-macosx/bin/phantomjs')
+driver_detail = webdriver.Chrome(executable_path='/Users/sallyfan/downloads/chromedriver')
+url = "https://movie.douban.com/explore#!type=movie&tag=%E7%83%AD%E9%97%A8&sort=recommend&page_limit=20&page_start=0"
 #等待页面家在方法
-wait = ui.WebDriverWait(driver_item,15)
+wait = ui.WebDriverWait(driver_detail,15)
 wait1 = ui.WebDriverWait(driver_detail, 15)
 
 #获取url和文章标题
 def getURL_Title():
     global SUMRESOURCES
+
 
 # 需要输入获取信息，例 种类，排序，想看多少
 
@@ -24,42 +25,42 @@ def getURL_Title():
     print("-----------------------------------------------")
     sort = input("1-Sort by hot\n2-Sort by time\n2-Sort by score\nplease select:")
     print('----------------------------------------------')
-    number = input("ToP?:")
+    number = int(input("ToP?:"))
     print('--------------------------')
     ask_long = input('dont need long comments, enter0, i like long commons enter 1:')
     print('-===-----------------------------')
     global save_name
     save_name = input('save_name (xx.txt)')
     print('-----------------crawling')
-    driver_item.get(url)
+    driver_detail.get(url)
     ##############################
     wait.until(
         lambda driver: driver.find_element_by_xpath("//div[@class='fliter-wp']/div/form/div/div/label[%s]" % kind))
-    driver_item.find_element_by_xpath("//div[@class='fliter-wp']/div/form/div/div/label[%s]" % kind).click()
+    driver_detail.find_element_by_xpath("//div[@class='fliter-wp']/div/form/div/div/label[%s]" % kind).click()
     wait.until(
         lambda driver: driver.find_element_by_xpath("//div[@class='fliter-wp']/div/form/div[3]/div/label[%s]" % sort))
-    driver_item.find_element_by_xpath("//div[@class='fliter-wp']/div/form/div[3]/div/label[%s]" % sort).click()
+    driver_detail.find_element_by_xpath("//div[@class='fliter-wp']/div/form/div[3]/div/label[%s]" % sort).click()
     num = number + 1
     time.sleep(2)
 
-    num_time = num/20+1
+    num_time = int(num/20)+1
     wait.until(lambda driver: driver.find_element_by_xpath("//div[@class='list-wp']/a[@class='more']") )
 
     for times in range(1, num_time):
         time.sleep(1)
-        driver_item.find_elements_by_xpath("//div[@class='list-wp']/a[@class='more']").click()
+        driver_detail.find_elements_by_xpath("//div[@class='list-wp']/a[@class='more']").click()
         time.sleep(1)
         wait.until(lambda driver: driver.find_element_by_xpath("//div[@class='list']/a[%d]"%num))
     for i in range(1, num):
         wait.until(lambda driver: driver.find_element_by_xpath("//div[@class='list']/a[%d]" % num))
-        list_title = driver_item.find_element_by_xpath("//div[@class='list']/a[%d]" % i)
+        list_title = driver_detail.find_element_by_xpath("//div[@class='list']/a[%d]" % i)
         print
-        '----------------------------------------------' + 'NO' + str(
-            SUMRESOURCES + 1) + '----------------------------------------------'
+        ('----------------------------------------------' + 'NO' + str(
+            SUMRESOURCES + 1) + '----------------------------------------------')
+        print(
+        u'电影名: ' + list_title.text)
         print
-        u'电影名: ' + list_title.text
-        print
-        u'链接: ' + list_title.get_attribute('href')  #unicode 转utf-8
+        (u'链接: ' + list_title.get_attribute('href'))  #unicode 转utf-8
 
         #写入txt部分1
         list_title_wr = list_title.text.encode('utf-8') #unicode码,需要重新编码再写入txt
@@ -130,7 +131,7 @@ def Write_txt(text1='',text2='',title='douban.txt'):
 
         with open(title,"a") as f:
             for i in text1:
-                f.write(i)
+                f.write(str(i))
             f.write("\n")
             for j in text2:
                 f.write(j)
@@ -139,7 +140,7 @@ def Write_txt(text1='',text2='',title='douban.txt'):
 def main():
 
     getURL_Title()
-    driver_item.quit()
+    driver_detail.quit()
 
 main()
 
