@@ -54,7 +54,7 @@ def comments_wods(shopID, commpg):
 
     # dcap["phantomjs.page.settings.userAgent"] = (uaList[random.randrange(0,len(uaList)+1)])
 
-    pgno = 1
+    pgno = 2
     all_comments = []
     while pgno <= commpg:
         dcap["phantomjs.page.settings.userAgent"] = (random.choice(uaList))
