@@ -5,12 +5,12 @@ import time
 
 print('----------------SYSTEM LOADIUNG, please wait........')
 SUMRESOURCES = 0 #全局变量
-# driver_detail = webdriver.PhantomJS(executable_path='/Users/sallyfan/downloads/phantomjs-2.1.1-macosx/bin/phantomjs')
+driver_item = webdriver.PhantomJS(executable_path='/Users/sallyfan/downloads/phantomjs-2.1.1-macosx/bin/phantomjs')
 driver_detail = webdriver.Chrome(executable_path='/Users/sallyfan/downloads/chromedriver')
 url = "https://movie.douban.com/explore#!type=movie&tag=%E7%83%AD%E9%97%A8&sort=recommend&page_limit=20&page_start=0"
 #等待页面家在方法
-wait = ui.WebDriverWait(driver_detail,15)
-wait1 = ui.WebDriverWait(driver_detail, 15)
+wait1 = ui.WebDriverWait(driver_item,15)
+wait = ui.WebDriverWait(driver_detail, 15)
 
 #获取url和文章标题
 def getURL_Title():
@@ -44,7 +44,7 @@ def getURL_Title():
     time.sleep(2)
 
     num_time = int(num/20)+1
-    wait.until(lambda driver: driver.find_element_by_xpath("//div[@class='list-wp']/a[@class='more']") )
+    wait.until(lambda driver: driver.find_element_by_xpath("//*[@id='content']/div/div[1]/div/div[4]/a") )
 
     for times in range(1, num_time):
         time.sleep(1)
@@ -53,14 +53,13 @@ def getURL_Title():
         wait.until(lambda driver: driver.find_element_by_xpath("//div[@class='list']/a[%d]"%num))
     for i in range(1, num):
         wait.until(lambda driver: driver.find_element_by_xpath("//div[@class='list']/a[%d]" % num))
-        list_title = driver_detail.find_element_by_xpath("//div[@class='list']/a[%d]" % i)
+        list_title = driver_detail.find_element_by_xpath("//*[@class='list']/a[%d]" % i)
         print
         ('----------------------------------------------' + 'NO' + str(
             SUMRESOURCES + 1) + '----------------------------------------------')
         print(
         u'电影名: ' + list_title.text)
-        print
-        (u'链接: ' + list_title.get_attribute('href'))  #unicode 转utf-8
+        print(u'链接: ' + list_title.get_attribute('href'))  #unicode 转utf-8
 
         #写入txt部分1
         list_title_wr = list_title.text.encode('utf-8') #unicode码,需要重新编码再写入txt
@@ -83,17 +82,21 @@ def getURL_Title():
 #在加载长评论的时候，注意模拟点击一次小三角，不然可能会使内容隐藏
 ##########################################################
 
-def getDetails(url, ask_long):
-    driver_detail.get(url)
-    wait1.until(lambda driver: driver.find_element_by_xpath("//div[@id='link-report']/span"))
-    drama = driver_detail.find_elements_by_xpath("//div[@id='link-report']/span")
-    print(u"剧情简介："+ drama.text)
-    drama_wr = drama.text.encode('utf-8')
-    Write_txt(drama_wr, '',save_name)
+def getDetails(urll, ask_long):
+    driver_item.get(urll)
+    # wait.until(lambda driver_item: driver_item.find_element_by_xpath("//*[@id='link-report']/span"))
+    #time.sleep(3)
+    drama = driver_item.find_element_by_xpath("//*[@id='link-report']/span").text
+    print('wait...为 WAIT')
+
+    print("剧情简介：")
+    print(repr(drama))
+    # drama_wr = drama.text.encode('utf-8')
+    # Write_txt(drama_wr, '',save_name)
     print("------------------hot comments top------------")
     for i in range(1,5):
         try:
-            comments_hot = driver_detail.find_element_by_xpath("//div[@id='hot-comments']/div[%s]/div/p"%i)
+            comments_hot = driver_detail.find_element_by_xpath("//*[@id='hot-comments']/div[%s]/div/p"%i)
             print(u"最新热评：" + comments_hot.text)
             comments_hot_wr = comments_hot.text.encode('utf-8')
             Write_txt("------------------hot comments top%d-----------------------------------------------"%i,'',save_name)
@@ -104,7 +107,7 @@ def getDetails(url, ask_long):
         if ask_long == 1:
             try:
                 driver_detail.find_element_by_xpath("//img[@class='bn-arrow']").click()
-                # wait.until(lambda driver: driver.find_element_by_xpath("//div[@class='review-bd']/div[2]/div/div"))
+                wait.until(lambda driver: driver.find_element_by_xpath("//div[@class='review-bd']/div[2]/div/div"))
                 time.sleep(1)
                 # 解决加载长评会提示剧透问题导致无法加载
                 comments_get = driver_detail.find_element_by_xpath("//div[@class='review-bd']/div[2]/div")
@@ -122,8 +125,7 @@ def getDetails(url, ask_long):
                     '', save_name)
                 Write_txt(comments_deep_wr, '', save_name)
             except:
-                print
-                ('can not caught the deep_comments!')
+                print('can not caught the deep_comments!')
 ##############################################################################
 #将print输出的写入txt中查看，也可以在cmd中查看，换行符是为了美观
 ##############################################################################
