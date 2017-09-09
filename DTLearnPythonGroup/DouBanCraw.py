@@ -96,11 +96,11 @@ def getDetails(urll, ask_long):
     print("------------------hot comments top------------")
     for i in range(1,5):
         try:
-            comments_hot = driver_detail.find_element_by_xpath("//*[@id='hot-comments']/div[%s]/div/p"%i)
-            print(u"最新热评：" + comments_hot.text)
-            comments_hot_wr = comments_hot.text.encode('utf-8')
-            Write_txt("------------------hot comments top%d-----------------------------------------------"%i,'',save_name)
-            Write_txt(comments_hot_wr,'',save_name)
+            comments_hot = driver_item.find_element_by_xpath("//*[@id='hot-comments']/div[%d]/div/p"%i).text
+            print("最新热评：" + comments_hot)
+            # comments_hot_wr = comments_hot.text.encode('utf-8')
+            # Write_txt("------------------hot comments top%d-----------------------------------------------"%i,'',save_name)
+            # Write_txt(comments_hot_wr,'',save_name)
         except:
             print( 'can not caught the comments!')
             # 加载长评
