@@ -27,7 +27,7 @@ def getURL_Title():
     print('----------------------------------------------')
     number = int(input("ToP?:"))
     print('--------------------------')
-    ask_long = input('dont need long comments, enter0, i like long commons enter 1:')
+    ask_long = int(input('dont need long comments, enter0, i like long commons enter 1:'))
     print('-===-----------------------------')
     global save_name
     save_name = input('save_name (xx.txt)')
@@ -54,12 +54,9 @@ def getURL_Title():
     for i in range(1, num):
         wait.until(lambda driver: driver.find_element_by_xpath("//div[@class='list']/a[%d]" % num))
         list_title = driver_detail.find_element_by_xpath("//*[@class='list']/a[%d]" % i)
-        print
-        ('----------------------------------------------' + 'NO' + str(
-            SUMRESOURCES + 1) + '----------------------------------------------')
-        print(
-        u'电影名: ' + list_title.text)
-        print(u'链接: ' + list_title.get_attribute('href'))  #unicode 转utf-8
+        print('----------------------------------------------' + 'NO ' + str(SUMRESOURCES + 1) + '----------------------------------------------')
+        print('电影名: ' + list_title.text)
+        print('链接: ' + list_title.get_attribute('href'))  #unicode 转utf-8
 
         #写入txt部分1
         list_title_wr = list_title.text.encode('utf-8') #unicode码,需要重新编码再写入txt
@@ -87,7 +84,7 @@ def getDetails(urll, ask_long):
     # wait.until(lambda driver_item: driver_item.find_element_by_xpath("//*[@id='link-report']/span"))
     #time.sleep(3)
     drama = driver_item.find_element_by_xpath("//*[@id='link-report']/span").text
-    print('wait...为 WAIT')
+
 
     print("剧情简介：")
     print(repr(drama))
@@ -106,24 +103,24 @@ def getDetails(urll, ask_long):
             # 加载长评
         if ask_long == 1:
             try:
-                driver_detail.find_element_by_xpath("//img[@class='bn-arrow']").click()
-                wait.until(lambda driver: driver.find_element_by_xpath("//div[@class='review-bd']/div[2]/div/div"))
-                time.sleep(1)
+                # driver_item.find_element_by_xpath("//div[@class = 'indicator j unfold']/a").click()
+                driver_item.find_element_by_xpath("//div[@class='review-list']/div[1]/div/header/h3/div/a").click()
+                print('click done')
+                # wait1.until(lambda driver: driver.find_element_by_xpath("//div[@class='review-bd']/div[2]/div/div"))
+                # time.sleep(1)
                 # 解决加载长评会提示剧透问题导致无法加载
-                comments_get = driver_detail.find_element_by_xpath("//div[@class='review-bd']/div[2]/div")
-                if comments_get.text.encode('utf-8') == '提示: 这篇影评可能有剧透':
-                    comments_deep = driver_detail.find_element_by_xpath("//div[@class='review-bd']/div[2]/div[2]")
+                comments_get = driver_item.find_element_by_xpath("//*[@id='link-report']/div[1]").text
+                if comments_get == '提示: 这篇影评可能有剧透':
+                    comments_deep = driver_item.find_element_by_xpath("//div[@class='review-bd']/div[2]/div[2]").text
                 else:
                     comments_deep = comments_get
-                print(
-                "--------------------------------------------long-comments---------------------------------------------")
-                print(
-                u"深度长评：" + comments_deep.text)
-                comments_deep_wr = comments_deep.text.encode('utf-8')
-                Write_txt(
-                    "--------------------------------------------long-comments---------------------------------------------\n",
-                    '', save_name)
-                Write_txt(comments_deep_wr, '', save_name)
+                print("--------------------------------------------long-comments---------------------------------------------")
+                print("深度长评：" + comments_deep)
+                # # comments_deep_wr = comments_deep.text.encode('utf-8')
+                # Write_txt(
+                #     "--------------------------------------------long-comments---------------------------------------------\n",
+                #     '', save_name)
+                # Write_txt(comments_deep_wr, '', save_name)
             except:
                 print('can not caught the deep_comments!')
 ##############################################################################
