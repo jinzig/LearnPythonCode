@@ -103,7 +103,7 @@ def getDetails(urll, ask_long):
             # 加载长评
         if ask_long == 1:
             try:
-                # driver_item.find_element_by_xpath("//div[@class = 'indicator j unfold']/a").click()
+                #driver_item.find_element_by_xpath("//div[@class = 'indicator j unfold']/a").click()
                 driver_item.find_element_by_xpath("//div[@class='review-list']/div[1]/div/header/h3/div/a").click()
                 print('click done')
                 # wait1.until(lambda driver: driver.find_element_by_xpath("//div[@class='review-bd']/div[2]/div/div"))
