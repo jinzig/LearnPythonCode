@@ -7,7 +7,7 @@ import time
 import random
 import select
 import PIL
-
+import asyncio
 
 # shopID = int(input("input shopid please:  "))
 # commpg = int(input("page number of shop:  "))
@@ -71,10 +71,12 @@ def comments_wods(shopID, commpg):
             for i in comments_content:
                 all_comments.append(i.text)
         pg_comment= "".join(all_comments)
-        time.sleep(random.choice([1,2,3,0.5,1.5]))
+        time.sleep(random.choice([1,2.1,1.7,0.5,1.5]))
         # f.write(pg_comment)
 
                 # print (i.text)
+
+
         print(pg_comment)
         print(pgno)
 
