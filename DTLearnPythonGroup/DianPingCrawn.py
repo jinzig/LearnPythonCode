@@ -71,7 +71,7 @@ def comments_wods(shopID, commpg):
             for i in comments_content:
                 all_comments.append(i.text)
         pg_comment= "".join(all_comments)
-        time.sleep(random.choice([1,2.1,1.7,0.5,1.5]))
+        time.sleep(random.choice([1,0.3,1.7,0.5,0.7]))
         # f.write(pg_comment)
 
                 # print (i.text)
@@ -87,7 +87,7 @@ def comments_wods(shopID, commpg):
 
 
 import jieba
-wordlist = jieba.cut(comments_wods(6603735,30), cut_all = True)
+wordlist = jieba.cut(comments_wods(6603735,9), cut_all = True)
 word_space_split = " ".join(wordlist)
 
 # print(comments_wods(16795494, 10))
