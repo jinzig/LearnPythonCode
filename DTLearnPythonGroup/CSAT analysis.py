@@ -27,13 +27,13 @@ for i in openfile:
 finalfile = "".join(file)
 # print(type((finalfile))
 
-cutwords =  jieba.cut(finalfile, cut_all=False, HMM=False)
-jieba.suggest_freq('充电桩', True )
+cutwords =  jieba.cut_for_search(finalfile)
+jieba.suggest_freq(('充电桩','30米','特斯拉'), True )
 cipin = jieba.analyse.textrank(finalfile,topK=30, allowPOS= ('a','v'), withFlag=False)
 print(cipin)
-cipin2 = jieba.analyse.extract_tags(finalfile, topK=30,allowPOS= ('a','v','ver'))
+cipin2 = jieba.analyse.extract_tags(finalfile, topK=30,allowPOS= ('a','v','ver'),withFlag=False)
 print(cipin2)
 
 #
-# count  = Counter(cutwords)
-# print(count)
+count  = Counter(cutwords).most_common(30)
+print(count)
