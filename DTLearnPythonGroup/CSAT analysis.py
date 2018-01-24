@@ -17,6 +17,7 @@ import jieba.analyse
 
 
 openfile = open('/Users/sallyfan/desktop/cusfeedbacks.txt')
+# openfile = open('/Users/sallyfan/desktop/csat.txt')
 # for i in file:
 #     print(i)
 file = []
@@ -26,13 +27,13 @@ for i in openfile:
 finalfile = "".join(file)
 # print(type((finalfile))
 
-# cutwords =  jieba.cut_for_search(finalfile)
-cipin = jieba.analyse.textrank(finalfile, topK=20)
+cutwords =  jieba.cut(finalfile, cut_all=False, HMM=False)
+jieba.suggest_freq('充电桩', True )
+cipin = jieba.analyse.textrank(finalfile,topK=30, allowPOS= ('a','v'), withFlag=False)
 print(cipin)
-cipin2 = jieba.analyse.extract_tags(finalfile, topK=20)
+cipin2 = jieba.analyse.extract_tags(finalfile, topK=30,allowPOS= ('a','v','ver'))
 print(cipin2)
 
-# for word in cutwords:
-#     print(word)
+#
 # count  = Counter(cutwords)
 # print(count)
