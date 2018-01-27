@@ -1,6 +1,5 @@
 import requests
-import teslajsonpy
-import bs4
+
 import json
 
 
