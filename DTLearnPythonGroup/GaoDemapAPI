@@ -1,0 +1,72 @@
+import csv
+import pandas as pd
+import numpy as np
+import requests
+from bs4 import BeautifulSoup
+import xlrd
+import re
+import pprint
+import openpyxl
+
+
+filePath = "C:/WorkFolder/PYTHON/BeijingWeiPiPei1.xlsx"
+file = pd.read_excel(filePath, index_col=0, header=1)
+# print(file.head(5))
+
+
+
+def AddtoADD(badAddress):
+    Address = str(badAddress)
+    KEYid = "***********************"
+
+    GaoDeCODEAdd = "https://restapi.amap.com/v3/geocode/geo?address=" + Address + "&city=beijinge" + "&output=XML&key=" +KEYid
+
+
+
+    response1 = requests.get(GaoDeCODEAdd).content.decode('utf8')
+    # response = response.text
+    response = BeautifulSoup(response1)
+    # pprint.pprint(response1)
+
+
+    try:
+        FmtAdd = response.find("formatted_address").get_text()
+        # print(FmtAdd)
+        FmtAdd = FmtAdd.split("|")
+        FmtAdd = ''.join(FmtAdd)
+        # print(FmtAdd)
+        GaoDePOIAdd = "	https://restapi.amap.com/v3/place/text?keywords=" + FmtAdd + "&city=beijing" + "&types=120300&output=xml&offset=20&page=1&key=" + KEYid
+        response = requests.get(GaoDePOIAdd).content.decode('utf8')
+        # pprint.pprint(response)
+
+
+        response = BeautifulSoup(response).find("name").text
+    except Exception:
+        response = "~~~~~~~前方坟地~~~~~~"
+
+
+
+
+    return(response)
+
+
+list_result = []
+for line in file.iterrows():
+
+#     list_result.append(line[0])
+#     print(list_result)
+# while len(list_result) <10:
+#     print("okok")
+# else:
+#     '|'.join(list_result)
+#     Gaode_result = AddtoADD(list_result)
+#     print(Gaode_result)
+
+    print("++++", line, "+++++++")
+    print(AddtoADD(line[0]),"\n------------------------------")
+    list_result.append(AddtoADD(line[0]))
+print(list_result)
+file.insert(1, "小区名称", list_result)
+print(file.head(20))
+
+file.to_excel(filePath)
