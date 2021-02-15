@@ -23,8 +23,8 @@ file = pd.read_excel(filePath, index_col=0, header=1)
 newlist = []
 for line in file.iterrows():
     line = str(line[:1]).strip("(,),，,',")
-    lineAdd = "https://restapi.amap.com/v3/geocode/geo?address=" + line + "&output=XML&key=" +"d7426dc4af2010f30421a9ed2e520cb7"  #计算经纬度的API地址
-    # lineAdd = "https://restapi.amap.com/v3/place/text?keywords=" + line + "&city=beijing" + "&types=120300&output=xml&offset=20&page=1&key=" + "d7426dc4af2010f30421a9ed2e520cb7"  # 计算小区的API地址
+    lineAdd = "https://restapi.amap.com/v3/geocode/geo?address=" + line + "&output=XML&key=" +"d32423423"  #计算经纬度的API地址
+    # lineAdd = "https://restapi.amap.com/v3/place/text?keywords=" + line + "&city=beijing" + "&types=120300&output=xml&offset=20&page=1&key=" + "d7434343"  # 计算小区的API地址
     # print(type(line))
     newlist.append(lineAdd)
 
@@ -68,7 +68,7 @@ async def get_formattedAdd(addressTarget):
 async def get_PIO(addressTarget):
     with(await sem):
         async with aiohttp.ClientSession() as session:  # 获取session
-            NewUrl = 'https://restapi.amap.com/v3/place/text?keywords=' + response + "&city=beijing" + "&types=120300&output=xml&offset=20&page=1&key=" + "d7426dc4af2010f30421a9ed2e520cb7"  # 计算小区的API地址
+            NewUrl = 'https://restapi.amap.com/v3/place/text?keywords=' + response + "&city=beijing" + "&types=120300&output=xml&offset=20&page=1&key=" + "d7426dc4af20321320cb7"  # 计算小区的API地址
             async with session.request("GET", NewUrl) as resp2:
                 response99 = await resp2.text()
                 response99 = BeautifulSoup(response99, "lxml")
