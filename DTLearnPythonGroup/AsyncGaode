@@ -1,0 +1,101 @@
+import time
+from lxml import etree
+import aiohttp
+import asyncio
+import csv
+import pandas as pd
+import numpy as np
+import requests
+from bs4 import BeautifulSoup
+import xlrd
+import re
+import pprint
+import openpyxl
+import multiprocessing as mp
+import uvloop
+
+
+
+# filePath = "C:/WorkFolder/PYTHON/BeijingWeiPiPei1.xlsx"
+filePath = "C:/WorkFolder/PYTHON/concat_excel_address58K.xlsx"
+file = pd.read_excel(filePath, index_col=0, header=1)
+
+newlist = []
+for line in file.iterrows():
+    line = str(line[:1]).strip("(,),，,',")
+    lineAdd = "https://restapi.amap.com/v3/geocode/geo?address=" + line + "&output=XML&key=" +"d7426dc4af2010f30421a9ed2e520cb7"  #计算经纬度的API地址
+    # lineAdd = "https://restapi.amap.com/v3/place/text?keywords=" + line + "&city=beijing" + "&types=120300&output=xml&offset=20&page=1&key=" + "d7426dc4af2010f30421a9ed2e520cb7"  # 计算小区的API地址
+    # print(type(line))
+    newlist.append(lineAdd)
+
+AddressTargetlist = newlist[:]
+print(AddressTargetlist)
+
+'''
+    
+            response = requests.get(GaoDePOIAdd).content.decode('utf8')
+            # pprint.pprint(response)
+    
+    
+            response = BeautifulSoup(response).find("name").text
+'''
+
+
+
+timeStart = time.time()
+
+TempContainer = []
+sem = asyncio.Semaphore(80)
+async def get_formattedAdd(addressTarget):
+    with(await sem):
+        async with aiohttp.ClientSession() as session:  #获取session
+            async with session.request("GET", addressTarget) as resp:  #提出需求
+                response1 = await resp.text()
+                # html = response1.decode('utf8')
+
+                response = BeautifulSoup(response1, "lxml")
+                response = response.find("formatted_address", text= None).text
+                response = response.replace("|","")
+                # response = response.find("name", text=None) #计算小区名称的API提取
+                timeConsume = timeStart - time.time()
+                TempContainer.append(response)
+                session.close()
+                print(len(TempContainer))
+                print("FMT标准地址：" + response )
+                print("用时：" + timeConsume)
+                return response
+
+async def get_PIO(addressTarget):
+    with(await sem):
+        async with aiohttp.ClientSession() as session:  # 获取session
+            NewUrl = 'https://restapi.amap.com/v3/place/text?keywords=' + response + "&city=beijing" + "&types=120300&output=xml&offset=20&page=1&key=" + "d7426dc4af2010f30421a9ed2e520cb7"  # 计算小区的API地址
+            async with session.request("GET", NewUrl) as resp2:
+                response99 = await resp2.text()
+                response99 = BeautifulSoup(response99, "lxml")
+
+                response99 = response.find("name", text=None) #计算小区名称的API提取
+                timeConsume = timeStart - time.time()
+                TempContainer.append(response99)
+                # session.close()
+                print(len(TempContainer))
+                print(response99 +"222222")
+
+"""
+                try:
+                    FmtAdd = response.find("formatted_address").get_text()
+                    # print(FmtAdd)
+                    FmtAdd = FmtAdd.split("|")
+                    FmtAdd = ''.join(FmtAdd)
+                    print("处理后的标准地址:", FmtAdd)
+                except Exception:
+                    response = "~~~~~~~前方坟地~~~~~~"
+
+                print(response)
+"""
+
+
+loop = asyncio.get_event_loop()
+tasks = [get_formattedAdd(line123) for line123 in AddressTargetlist]  # 把所有任务放到一个列表中
+loop.run_until_complete(asyncio.wait(tasks)) # 激活协程
+loop.close()  # 关闭事件循环
+
